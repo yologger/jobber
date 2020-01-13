@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jobber/src/ui/screen/home_screen.dart';
 import 'package:jobber/src/ui/screen/detail_screen.dart';
 import 'package:jobber/src/ui/screen/settings_screen.dart';
+import 'package:jobber/src/ui/theme/theme.dart';
 
 
 class JobberApp extends StatefulWidget {
@@ -15,6 +16,7 @@ class _JobberAppState extends State<JobberApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: buildTheme(),
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
