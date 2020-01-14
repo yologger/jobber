@@ -13,56 +13,87 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxScrolled) => [HomeAppBar()],
           body: TabBarView(
             children: <Widget>[
-              AnimatedList(
-                initialItemCount: 5,
-                itemBuilder: (context, index, animation) {
-                  return Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text('Title'),
-                        subtitle: Text('Subtitle'),
-                        onTap: () {
-                          print('${index} item tapped.!');
-                          Navigator.pushNamed(context, '/detail',
-                              arguments: ScreenArguments(
-                                  index: index, message: 'data from ${index}'));
-                        },
-                      ),
-                      Divider(height: 1.0),
-                    ],
-                  );
-                },
-              ),
-              AnimatedList(
-                initialItemCount: 5,
-                itemBuilder: (context, index, animation) {
-                  return Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text('Title'),
-                        subtitle: Text('Subtitle'),
-                        onTap: () {
-                          print('${index} item tapped.!');
-                          Navigator.pushNamed(context, '/detail',
-                              arguments: ScreenArguments(
-                                  index: index, message: 'data from ${index}'));
-                        },
-                      ),
-                      Divider(height: 1.0),
-                    ],
-                  );
-                },
-              ),
+              PositionsListPage(),
+              SavedListPage(),
+              TestPage(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class PositionsListPage extends StatelessWidget {
+  const PositionsListPage({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedList(
+      initialItemCount: 5,
+      itemBuilder: (context, index, animation) {
+        return Column(
+          children: <Widget>[
+            ListTile(
+              title: Text('Title'),
+              subtitle: Text('Subtitle'),
+              onTap: () {
+                print('${index} item tapped.!');
+                Navigator.pushNamed(context, '/detail',
+                    arguments: ScreenArguments(
+                        index: index, message: 'data from ${index}'));
+              },
+            ),
+            Divider(height: 1.0),
+          ],
+        );
+      },
+    );
+  }
+}
+
+
+class SavedListPage extends StatelessWidget {
+  const SavedListPage({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedList(
+      initialItemCount: 5,
+      itemBuilder: (context, index, animation) {
+        return Column(
+          children: <Widget>[
+            ListTile(
+              title: Text('Title'),
+              subtitle: Text('Subtitle'),
+              onTap: () {
+                print('${index} item tapped.!');
+                Navigator.pushNamed(context, '/detail',
+                    arguments: ScreenArguments(
+                        index: index, message: 'data from ${index}'));
+              },
+            ),
+            Divider(height: 1.0),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class TestPage extends StatelessWidget {
+  const TestPage({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('This is Test')
     );
   }
 }

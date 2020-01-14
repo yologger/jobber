@@ -29,6 +29,7 @@ class HomeAppBar extends StatelessWidget {
         tabs: <Widget>[
           Tab(text: 'Near Me', icon: Icon(Icons.home)),
           Tab(text: 'Saved', icon: Icon(Icons.star)),
+          Tab(text: 'Test', icon: Icon(Icons.ac_unit)),
         ],
       ),
     );
