@@ -19,7 +19,10 @@ class _JobberAppState extends State<JobberApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => JobsProvider(),
+            create: (_) {
+              print('app.dart');
+              return JobsProvider()..loadJobs();
+            }
           ),
         ],
         child: MaterialApp(theme: buildTheme(), initialRoute: '/', routes: {

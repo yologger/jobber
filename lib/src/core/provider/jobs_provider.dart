@@ -3,19 +3,69 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 class JobsProvider extends ChangeNotifier {
+  
   final _client = Client();
   final _baseUrl = 'https://jobs.github.com';
 
-  int page = 0;
+  int page = 1;
 
   bool _isLoading = false;
+  bool _isMoreData = true;
 
+  get isMoreData => _isMoreData;
   get isLoading => _isLoading;
   get jobs => _jobs;
 
   List<dynamic> _jobs = [];
 
+
+
+
+
+  void loadJobs({String location}) async {
+
+    _isLoading = true;
+
+    notifyListeners();
+    Response response;
+
+    if (location != null) {
+      try {
+        response = await _client.get('$_baseUrl/positions.json?location=${location}');
+      } catch (e) {
+        print('Failed to get jobs from location: $e');
+        _jobs = [];
+      }
+    } else {
+      try {
+        response = await _client.get('$_baseUrl/positions.json?page=${page}');
+      } catch (e) {
+        print('Failed to get jobs: $e');
+        _jobs = [];
+      }
+    }
+
+    var result = _handleResponse(response);
+    print('RESULT_LENGTH: ${result.length}');
+    if(result.length != 0) {
+      result.forEach((job) {
+        _jobs.add(job);
+      });
+      page = page +1;
+    } else {
+      _isMoreData = false;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+
   void getJobs({String location}) async {
+
+    if(!_isMoreData) {
+      return ;
+    }
+
     // _isLoading = true;
     // notifyListeners();
     Response response;
@@ -29,17 +79,25 @@ class JobsProvider extends ChangeNotifier {
       }
     } else {
       try {
-        response = await _client.get('$_baseUrl/positions.json');
+        response = await _client.get('$_baseUrl/positions.json?page=${page}');
       } catch (e) {
         print('Failed to get jobs: $e');
         _jobs = [];
       }
     }
+    
+    var result = _handleResponse(response);
 
-    _handleResponse(response).forEach((job) {
-      _jobs.add(job);
-    });
-    // _isLoading = false;
+    print('RESULT_LENGTH: ${result.length}');
+    if(result.length != 0) {
+      result.forEach((job) {
+        _jobs.add(job);
+      });
+      page = page +1;
+    } else {
+      _isMoreData = false;
+    }
+    _isLoading = false;
     notifyListeners();
   }
 

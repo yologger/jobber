@@ -11,8 +11,13 @@ class PositionsListPage extends StatefulWidget {
 }
 
 class _PositionsListPageState extends State<PositionsListPage> {
+
   ScrollController _scrollController = ScrollController();
+
   JobsProvider jobsProvider;
+
+  final bool isLocationActivated = true;
+  final String userLocation = 'new+york';
 
   @override
   void initState() {
@@ -23,7 +28,6 @@ class _PositionsListPageState extends State<PositionsListPage> {
       _scrollController.addListener(() {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
-          //jobsProvider.getJobs();
           jobsProvider.getJobs();
         }
       });
@@ -39,13 +43,16 @@ class _PositionsListPageState extends State<PositionsListPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<JobsProvider>(builder: (context, jobsProvider, child) {
-      return jobsProvider.isLoading
+      return isLocationActivated
+        ? jobsProvider.isLoading
           ? _loading(context)
-          : _content(context, jobsProvider);
+          : _content(context, jobsProvider)
+        : _requestLocation(context);
     });
   }
 
   Widget _content(BuildContext context, jobsProvider) {
+
     final jobs = jobsProvider.jobs;
 
     if (jobs.isEmpty) {
@@ -72,12 +79,12 @@ class _PositionsListPageState extends State<PositionsListPage> {
           separatorBuilder: (context, index) => const Divider(height: 1.0),
           itemCount: jobs.length + 1,
           itemBuilder: (context, index) {
-            if (index == jobs.length) {
-              return Center(
+            if (index == jobs.length) {    
+              return jobsProvider.isMoreData ? Center(
                   child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(),
-              ));
+              )): null ;
             }
             final job = jobs[index];
             return ListTile(
@@ -102,6 +109,33 @@ class _PositionsListPageState extends State<PositionsListPage> {
             );
           });
     }
+  }
+
+  Widget _requestLocation(BuildContext context) {
+    return Container(
+        key: Key('Empty'),
+        height: MediaQuery.of(context).size.height / 2,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Location Access Disabled',
+              style: Theme.of(context).textTheme.title.copyWith(
+                    color: Colors.white54,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Please Allow "Jobber" to use your location.',
+              style: Theme.of(context).textTheme.body1.copyWith(
+                    color: Colors.white54,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
   }
 
   Widget _loading(BuildContext context) => Container(

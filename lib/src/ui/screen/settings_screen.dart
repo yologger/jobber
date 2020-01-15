@@ -21,6 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var dummyUserLocation =
       UserLocation(latitude: 37.566536, longitude: 126.977966);
 
+  bool isSwitchOn = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +42,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: Text('Use location'),
               subtitle:
                   Text('Positions will be filtered by the your location.'),
-              value: true,
-              onChanged: (setting) => print('HELLO WORLD')),
+              value: isSwitchOn,
+              onChanged: (setting) {
+                setState(() {
+                  isSwitchOn = !isSwitchOn;
+                });
+              }
+            ),
           const Divider(),
         ],
       ),
