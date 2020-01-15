@@ -11,7 +11,6 @@ class PositionsListPage extends StatefulWidget {
 }
 
 class _PositionsListPageState extends State<PositionsListPage> {
-
   ScrollController _scrollController = ScrollController();
 
   JobsProvider jobsProvider;
@@ -44,15 +43,14 @@ class _PositionsListPageState extends State<PositionsListPage> {
   Widget build(BuildContext context) {
     return Consumer<JobsProvider>(builder: (context, jobsProvider, child) {
       return isLocationActivated
-        ? jobsProvider.isLoading
-          ? _loading(context)
-          : _content(context, jobsProvider)
-        : _requestLocation(context);
+          ? jobsProvider.isLoading
+              ? _loading(context)
+              : _content(context, jobsProvider)
+          : _requestLocation(context);
     });
   }
 
   Widget _content(BuildContext context, jobsProvider) {
-
     final jobs = jobsProvider.jobs;
 
     if (jobs.isEmpty) {
@@ -79,16 +77,18 @@ class _PositionsListPageState extends State<PositionsListPage> {
           separatorBuilder: (context, index) => const Divider(height: 1.0),
           itemCount: jobs.length + 1,
           itemBuilder: (context, index) {
-            if (index == jobs.length) {    
-              return jobsProvider.isMoreData ? Center(
-                  child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
-              )): null ;
+            if (index == jobs.length) {
+              return jobsProvider.isMoreData
+                  ? Center(
+                      child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    ))
+                  : null;
             }
             final job = jobs[index];
             return ListTile(
-              //key: parentKey,
+              key: ValueKey(job['id']),
               title: Text("[${index}] ${job['title']}"),
               subtitle: Text("${job['location']}"),
               trailing: Icon(Icons.star),
@@ -102,7 +102,16 @@ class _PositionsListPageState extends State<PositionsListPage> {
                 '/detail',
                 arguments: ScreenArguments(
                   id: job['id'].toString(),
+                  type: job['type'].toString(),
+                  url: job['url'].toString(),
+                  created_at: job['created_at'].toString(),
+                  company_url: job['company_url'].toString(),
+                  location: job['location'].toString(),
                   title: job['title'].toString(),
+                  description: job['description'],
+                  how_to_apply: job['how_to_apply'],
+                  company_logo: job['company_logo'].toString(),
+                  company: job['company'].toString(),
                   // parentKey: parentKey,
                 ),
               ),

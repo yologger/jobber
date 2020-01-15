@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobber/src/core/model/screen_arguments.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreen extends StatefulWidget {
   final int index;
@@ -16,15 +17,19 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     final arguments =
         (ModalRoute.of(context).settings.arguments) as ScreenArguments;
-
+    print('DESCRIPTION: ${arguments.description}');
+    print('HOW_TO_APPLY: ${arguments.how_to_apply}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Position'),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.star),
+        onPressed: () {
+          print(arguments.how_to_apply);
+        },
       ),
-      body: _loading(),
+      body: _content(context, arguments),
     );
   }
 
@@ -43,13 +48,13 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-            title: Text('Samsung'),
-            subtitle: Text('Seoul, Korea'),
+            title: Text(arguments.company),
+            subtitle: Text(arguments.location),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
-              'Full Time',
+              arguments.type,
               style: Theme.of(context).textTheme.body2.copyWith(
                     color: Theme.of(context).accentColor,
                   ),
@@ -69,9 +74,8 @@ class _DetailScreenState extends State<DetailScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: MarkdownBody(
-              data:
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-              onTapLink: (url) => print(url),
+              data: arguments.description,
+              onTapLink: (url) => _launchUrl(url, context),
             ),
           ),
           Divider(height: kToolbarHeight),
@@ -95,9 +99,8 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: MarkdownBody(
-                data:
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                onTapLink: (url) => print('url'),
+               data: arguments.how_to_apply,
+                onTapLink: (url) => _launchUrl(url, context),
               ),
             ),
           ),
@@ -105,6 +108,16 @@ class _DetailScreenState extends State<DetailScreen> {
         ],
       ),
     );
+  }
+
+  void _launchUrl(String url, BuildContext context) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to launch url.'),
+      ));
+    }
   }
 
   Widget _loading() {

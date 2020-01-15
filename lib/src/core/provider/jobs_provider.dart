@@ -31,14 +31,14 @@ class JobsProvider extends ChangeNotifier {
 
     if (location != null) {
       try {
-        response = await _client.get('$_baseUrl/positions.json?location=${location}');
+        response = await _client.get('$_baseUrl/positions.json?markdown=true&location=${location}');
       } catch (e) {
         print('Failed to get jobs from location: $e');
         _jobs = [];
       }
     } else {
       try {
-        response = await _client.get('$_baseUrl/positions.json?page=${page}');
+        response = await _client.get('$_baseUrl/positions.json?markdown=true&page=${page}');
       } catch (e) {
         print('Failed to get jobs: $e');
         _jobs = [];
@@ -72,14 +72,14 @@ class JobsProvider extends ChangeNotifier {
 
     if (location != null) {
       try {
-        response = await _client.get('$_baseUrl/positions.json?location=${location}');
+        response = await _client.get('$_baseUrl/positions.json?markdown=true&location=${location}');
       } catch (e) {
         print('Failed to get jobs from location: $e');
         _jobs = [];
       }
     } else {
       try {
-        response = await _client.get('$_baseUrl/positions.json?page=${page}');
+        response = await _client.get('$_baseUrl/positions.json?markdown=true&page=${page}');
       } catch (e) {
         print('Failed to get jobs: $e');
         _jobs = [];
@@ -100,7 +100,6 @@ class JobsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
 
   dynamic _handleResponse(Response response, {String error}) {
     if (response.statusCode == 200) {
