@@ -1,6 +1,7 @@
 class ScreenArguments{
-  final int index;
-  final String message;
+  
+  final String id;
+  final String title;
 
-  ScreenArguments({this.index, this.message});
+  ScreenArguments({this.id, this.title});
 }

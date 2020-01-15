@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:jobber/src/core/provider/jobs_provider.dart';
 import 'package:jobber/src/ui/widget/home_app_bar.dart';
-import 'package:jobber/src/core/model/screen_arguments.dart';
+
+import 'package:jobber/src/ui/screen/page/positions_list_page.dart';
+import 'package:jobber/src/ui/screen/page/saved_list_page.dart';
+import 'package:jobber/src/ui/screen/page/test_page.dart';
+
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -10,8 +16,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   Widget build(BuildContext context) {
+
+    final JobsProvider jobsProvider = Provider.of<JobsProvider>(context);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -30,70 +40,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class PositionsListPage extends StatelessWidget {
-  const PositionsListPage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedList(
-      initialItemCount: 5,
-      itemBuilder: (context, index, animation) {
-        return Column(
-          children: <Widget>[
-            ListTile(
-              title: Text('Title'),
-              subtitle: Text('Subtitle'),
-              onTap: () {
-                print('${index} item tapped.!');
-                Navigator.pushNamed(context, '/detail',
-                    arguments: ScreenArguments(
-                        index: index, message: 'data from ${index}'));
-              },
-            ),
-            Divider(height: 1.0),
-          ],
-        );
-      },
-    );
-  }
-}
-
-
-class SavedListPage extends StatelessWidget {
-  const SavedListPage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedList(
-      initialItemCount: 5,
-      itemBuilder: (context, index, animation) {
-        return Column(
-          children: <Widget>[
-            ListTile(
-              title: Text('Title'),
-              subtitle: Text('Subtitle'),
-              onTap: () {
-                print('${index} item tapped.!');
-                Navigator.pushNamed(context, '/detail',
-                    arguments: ScreenArguments(
-                        index: index, message: 'data from ${index}'));
-              },
-            ),
-            Divider(height: 1.0),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class TestPage extends StatelessWidget {
-  const TestPage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('This is Test')
-    );
-  }
-}

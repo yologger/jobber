@@ -19,7 +19,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Position ${arguments.index}'),
+        title: Text('Position'),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.star_border),
@@ -32,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Text(
-                'Software Engineer',
+                '${arguments.title}',
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
