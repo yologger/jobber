@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
+import 'package:jobber/src/core/model/screen_arguments.dart';
+
 class JobsProvider extends ChangeNotifier {
   
   final _client = Client();
@@ -15,11 +17,10 @@ class JobsProvider extends ChangeNotifier {
   get isMoreData => _isMoreData;
   get isLoading => _isLoading;
   get jobs => _jobs;
+  get saved => _saved;
 
   List<dynamic> _jobs = [];
-
-
-
+  List<dynamic> _saved = [];
 
 
   void loadJobs({String location}) async {
@@ -46,7 +47,7 @@ class JobsProvider extends ChangeNotifier {
     }
 
     var result = _handleResponse(response);
-    print('RESULT_LENGTH: ${result.length}');
+    print('RESULT_LENGTH: ${result}');
     if(result.length != 0) {
       result.forEach((job) {
         _jobs.add(job);
@@ -88,7 +89,6 @@ class JobsProvider extends ChangeNotifier {
     
     var result = _handleResponse(response);
 
-    print('RESULT_LENGTH: ${result.length}');
     if(result.length != 0) {
       result.forEach((job) {
         _jobs.add(job);
@@ -98,6 +98,33 @@ class JobsProvider extends ChangeNotifier {
       _isMoreData = false;
     }
     _isLoading = false;
+    notifyListeners();
+  }
+
+  bool containItem(ScreenArguments arguments) {
+    return _saved.contains(arguments);
+  }
+
+  bool findItemById(String id) {
+    for(var item in _saved) {
+      if(item.id == id) {
+        return true;
+      } 
+    }
+    return false;
+  }
+
+  void save(ScreenArguments arguments) {
+    _saved.add(arguments);
+    print(_saved);
+    notifyListeners();
+  }
+
+  void remove(String id) {
+    var newSaved;
+    newSaved = _saved.where((item) => item.id != id).toList(); 
+    _saved = newSaved;
+    print(_saved);
     notifyListeners();
   }
 

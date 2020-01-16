@@ -91,13 +91,9 @@ class _PositionsListPageState extends State<PositionsListPage> {
               key: ValueKey(job['id']),
               title: Text("[${index}] ${job['title']}"),
               subtitle: Text("${job['location']}"),
-              trailing: Icon(Icons.star),
-              // trailing: job['id']
-              //     ? Icon(
-              //         Icons.star,
-              //         color: Colors.white54,
-              //       )
-              //     : null,
+              trailing: jobsProvider.findItemById(job['id'])
+              ? Icon(Icons.star) 
+              : null,
               onTap: () => Navigator.of(context).pushNamed(
                 '/detail',
                 arguments: ScreenArguments(

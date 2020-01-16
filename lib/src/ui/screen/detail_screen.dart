@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:jobber/src/core/model/screen_arguments.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:jobber/src/core/provider/jobs_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
-class DetailScreen extends StatefulWidget {
-  final int index;
-
-  DetailScreen({Key key, this.index}) : super(key: key);
-
-  @override
-  _DetailScreenState createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
+class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments =
         (ModalRoute.of(context).settings.arguments) as ScreenArguments;
-    print('DESCRIPTION: ${arguments.description}');
-    print('HOW_TO_APPLY: ${arguments.how_to_apply}');
+
+    JobsProvider jobsProvider = Provider.of<JobsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Position'),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.star),
+        child: jobsProvider.findItemById(arguments.id) ? Icon(Icons.star) : Icon(Icons.star_border),
         onPressed: () {
-          print(arguments.how_to_apply);
+          if (jobsProvider.findItemById(arguments.id)) {
+            jobsProvider.remove(arguments.id);
+          } else {
+            jobsProvider.save(arguments);
+          }
         },
       ),
       body: _content(context, arguments),
@@ -99,7 +97,7 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: MarkdownBody(
-               data: arguments.how_to_apply,
+                data: arguments.how_to_apply,
                 onTapLink: (url) => _launchUrl(url, context),
               ),
             ),

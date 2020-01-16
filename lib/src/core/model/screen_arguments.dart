@@ -11,6 +11,7 @@ class ScreenArguments{
   final String how_to_apply;
   final String company_logo;
   final String company;
+  bool isSaved;
 
   ScreenArguments({
     this.id, 
@@ -23,6 +24,7 @@ class ScreenArguments{
     this.description, 
     this.how_to_apply, 
     this.company_logo,
-    this.company
+    this.company,
+    this.isSaved = false,
   });
 }
