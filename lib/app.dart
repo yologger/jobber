@@ -5,6 +5,7 @@ import 'package:jobber/src/ui/screen/settings_screen.dart';
 import 'package:jobber/src/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:jobber/src/core/provider/jobs_provider.dart';
+import 'package:jobber/src/core/provider/location_provider.dart';
 
 class JobberApp extends StatefulWidget {
   JobberApp({Key key}) : super(key: key);
@@ -20,8 +21,12 @@ class _JobberAppState extends State<JobberApp> {
         providers: [
           ChangeNotifierProvider(
             create: (_) {
-              print('app.dart');
               return JobsProvider()..loadJobs();
+            }
+          ),
+          ChangeNotifierProvider(
+            create: (_) {
+              return LocationProvider();
             }
           ),
         ],

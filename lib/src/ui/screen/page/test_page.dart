@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:location/location.dart';
+
+
 
 class TestPage extends StatefulWidget {
   TestPage({Key key}) : super(key: key);
@@ -8,122 +11,69 @@ class TestPage extends StatefulWidget {
   _TestPageState createState() => _TestPageState();
 }
 
-final players = [
-  {
-    'name': 'ronaldo',
-    'nation': 'portugal',
-  },
-  {
-    'name': 'benzema',
-    'nation': 'france',
-  },
-  {
-    'name': 'ramos',
-    'nation': 'spain',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-  {
-    'name': 'kane',
-    'nation': 'england',
-  },
-];
-
 class _TestPageState extends State<TestPage> {
-  ScrollController _controller = ScrollController();
+  LocationData _currentLocation;
+
+  Location _locationService = new Location();
+  bool _permission = false;
+
+  double latitude;
+  double longtitude;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller.addListener(() {
-      print(_controller.position.pixels);
-      print(_controller.position.maxScrollExtent);
-      // if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-      //   print('HELLO!');
-      // }
-    });
+    latitude = 0;
+    longtitude = 0;
+    initPlatformState();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  initPlatformState() async {
+    await _locationService.changeSettings(
+        accuracy: LocationAccuracy.HIGH, interval: 1000);
+    LocationData location;
+    try {
+      bool serviceStatus = await _locationService.serviceEnabled();
+      print("Service status: $serviceStatus");
+      if (serviceStatus) {
+        _permission = await _locationService.requestPermission();
+        print("Permission: $_permission");
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return ListView.builder(
-  //       shrinkWrap: true,
-  //       physics: NeverScrollableScrollPhysics(),
-  //       controller: _controller,
-  //       itemCount: players.length,
-  //       itemBuilder: (ctx, index) {
-  //         final player = players[index];
-  //         return ListTile(
-  //             title: Text("${player['name']}"),
-  //             subtitle: Text("${player['nation']}"),
-  //             trailing: Icon(Icons.star),
-  //             onTap: () {});
-  //       });
-  // }
+        if (_permission) {
+          location = await _locationService.getLocation();
+          print('LOCATION LATITUDE: ${location.latitude}');
+          print('LOCATION LONGTITUDE: ${location.longitude}');
+          latitude = location.latitude;
+          longtitude = location.longitude;
+        }
+      } else {}
+    } catch (e) {
+      print('ERROR: ${e}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      controller: _controller,
-        separatorBuilder: (context, index) => const Divider(height: 1.0),
-        padding: EdgeInsets.zero,
-        itemCount: players.length,
-        itemBuilder: (context, index) {
-          final player = players[index];
-          return ListTile(
-              title: Text("${player['name']}"),
-              subtitle: Text("${player['nation']}"),
-              trailing: Icon(Icons.star),
-              onTap: () {});
-        });
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.ac_unit),
+          onPressed: () async {
+            var location = await _locationService.getLocation();
+            setState(() {
+              this.latitude = location.latitude;
+              this.longtitude = location.longitude;
+            
+            });
+          },
+        ),
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text('LATITUDE: ${this.latitude}'), 
+            Text('LONGTITUDE: ${this.longtitude}')
+          ],
+        )));
   }
 }

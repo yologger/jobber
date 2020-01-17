@@ -97,12 +97,6 @@ class _SavedListPageState extends State<SavedListPage> {
               title: Text("[${index}] ${job.title}"),
               subtitle: Text("${job.location}"),
               trailing: Icon(Icons.star),
-              // trailing: job['id']
-              //     ? Icon(
-              //         Icons.star,
-              //         color: Colors.white54,
-              //       )
-              //     : null,
               onTap: () => Navigator.of(context).pushNamed(
                 '/detail',
                 arguments: ScreenArguments(
