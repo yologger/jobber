@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobber/src/ui/screen/splash_screen.dart';
 import 'package:jobber/src/ui/screen/home_screen.dart';
 import 'package:jobber/src/ui/screen/detail_screen.dart';
 import 'package:jobber/src/ui/screen/settings_screen.dart';
@@ -19,21 +20,23 @@ class _JobberAppState extends State<JobberApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-            create: (_) {
-              return JobsProvider()..loadJobs();
-            }
-          ),
-          ChangeNotifierProvider(
-            create: (_) {
-              return LocationProvider();
-            }
-          ),
+          ChangeNotifierProvider(create: (_) {
+            return JobsProvider();
+          }),
+          ChangeNotifierProvider(create: (_) {
+            return LocationProvider();
+          }),
         ],
-        child: MaterialApp(theme: buildTheme(), initialRoute: '/', routes: {
-          '/': (context) => HomeScreen(),
-          '/detail': (context) => DetailScreen(),
-          '/settings': (context) => SettingsScreen(),
-        }));
+        child: MaterialApp(
+            theme: buildTheme(), 
+            initialRoute: '/splash', 
+            routes: {
+              '/splash': (context) => SplashScreen(),
+              '/': (context) => HomeScreen(),
+              '/detail': (context) => DetailScreen(),
+              '/settings': (context) => SettingsScreen(),
+            }
+        )
+      );
   }
 }

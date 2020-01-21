@@ -3,6 +3,7 @@ import 'package:jobber/src/core/model/screen_arguments.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:jobber/src/core/provider/jobs_provider.dart';
+import 'package:jobber/src/core/provider/location_provider.dart';
 
 
 class SavedListPage extends StatefulWidget {
@@ -18,20 +19,21 @@ class _SavedListPageState extends State<SavedListPage> {
   ScrollController _scrollController = ScrollController();
 
   JobsProvider jobsProvider;
+  LocationProvider locationProvider;
 
   final bool isLocationActivated = true;
-  final String userLocation = 'new+york';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () async{
       jobsProvider = Provider.of<JobsProvider>(context, listen: false);
+      // await jobsProvider.getJobs();
       _scrollController.addListener(() {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
-          jobsProvider.getJobs();
+          // jobsProvider.getJobs();
         }
       });
     });
@@ -45,12 +47,19 @@ class _SavedListPageState extends State<SavedListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print('saved_list! build!!!');
     return Consumer<JobsProvider>(builder: (context, jobsProvider, child) {
-      return isLocationActivated
-          ? jobsProvider.isLoading
+      return jobsProvider.isLoading
               ? _loading(context)
-              : _content(context, jobsProvider)
-          : _requestLocation(context);
+              : _content(context, jobsProvider);
+
+
+      // return isLocationActivated
+      //     ? jobsProvider.isLoading
+      //         ? _loading(context)
+      //         : _content(context, jobsProvider)
+      //     : _requestLocation(context);
     });
   }
 
@@ -82,15 +91,6 @@ class _SavedListPageState extends State<SavedListPage> {
           separatorBuilder: (context, index) => const Divider(height: 1.0),
           itemCount: saved.length,
           itemBuilder: (context, index) {
-            // if (index == saved.length) {
-            //   return jobsProvider.isMoreData
-            //       ? Center(
-            //           child: Padding(
-            //           padding: EdgeInsets.all(8.0),
-            //           child: CircularProgressIndicator(),
-            //         ))
-            //       : null;
-            // }
             final job = saved[index];
             return ListTile(
               key: ValueKey(job.id),
