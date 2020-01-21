@@ -18,14 +18,14 @@ class DetailScreen extends StatelessWidget {
         title: Text('Position'),
       ),
       floatingActionButton: FloatingActionButton(
-        // child: jobsProvider.findItemById(arguments.id) ? Icon(Icons.bookmark) : Icon(Icons.bookmark_border),
-        // onPressed: () {
-        //   if (jobsProvider.findItemById(arguments.id)) {
-        //     jobsProvider.remove(arguments.id);
-        //   } else {
-        //     jobsProvider.save(arguments);
-        //   }
-        // },
+        child: jobsProvider.findItemById(arguments.id) ? Icon(Icons.bookmark) : Icon(Icons.bookmark_border),
+        onPressed: () {
+          if (jobsProvider.findItemById(arguments.id)) {
+            jobsProvider.remove(arguments.id);
+          } else {
+            jobsProvider.save(arguments);
+          }
+        },
       ),
       body: _content(context, arguments),
     );

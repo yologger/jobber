@@ -105,10 +105,9 @@ class _PositionsListPageState extends State<PositionsListPage> {
               key: ValueKey(job['id']),
               title: Text("[${index}] ${job['title']}"),
               subtitle: Text("${job['location']}"),
-              trailing: Icon(Icons.bookmark),
-              // trailing: jobsProvider.findItemById(job['id'])
-              //     ? Icon(Icons.bookmark)
-              //     : null,
+              trailing: jobsProvider.findItemById(job['id'])
+                  ? Icon(Icons.bookmark)
+                  : null,
               onTap: () => Navigator.of(context).pushNamed(
                 '/detail',
                 arguments: ScreenArguments(
@@ -124,8 +123,7 @@ class _PositionsListPageState extends State<PositionsListPage> {
                   company_logo: job['company_logo'].toString(),
                   company: job['company'].toString(),
                   // parentKey: parentKey,
-                ),
-              ),
+                ))
             );
           });
     }

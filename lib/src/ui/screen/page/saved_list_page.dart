@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:jobber/src/core/provider/jobs_provider.dart';
 import 'package:jobber/src/core/provider/location_provider.dart';
 
-
 class SavedListPage extends StatefulWidget {
   SavedListPage({Key key}) : super(key: key);
 
@@ -13,30 +12,16 @@ class SavedListPage extends StatefulWidget {
   _SavedListPageState createState() => _SavedListPageState();
 }
 
-
 class _SavedListPageState extends State<SavedListPage> {
-
   ScrollController _scrollController = ScrollController();
 
   JobsProvider jobsProvider;
   LocationProvider locationProvider;
 
-  final bool isLocationActivated = true;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration.zero, () async{
-      jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-      // await jobsProvider.getJobs();
-      _scrollController.addListener(() {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
-          // jobsProvider.getJobs();
-        }
-      });
-    });
   }
 
   @override
@@ -47,27 +32,15 @@ class _SavedListPageState extends State<SavedListPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    print('saved_list! build!!!');
     return Consumer<JobsProvider>(builder: (context, jobsProvider, child) {
-      return jobsProvider.isLoading
-              ? _loading(context)
-              : _content(context, jobsProvider);
-
-
-      // return isLocationActivated
-      //     ? jobsProvider.isLoading
-      //         ? _loading(context)
-      //         : _content(context, jobsProvider)
-      //     : _requestLocation(context);
+      return _content(context, jobsProvider);
     });
   }
 
   Widget _content(BuildContext context, jobsProvider) {
+    final jobs = jobsProvider.saved;
 
-    final saved = jobsProvider.saved;
-
-    if (saved.isEmpty) {
+    if (jobs.isEmpty) {
       return Container(
         key: Key('Empty'),
         height: MediaQuery.of(context).size.height / 2,
@@ -89,61 +62,33 @@ class _SavedListPageState extends State<SavedListPage> {
           shrinkWrap: true,
           // physics: NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) => const Divider(height: 1.0),
-          itemCount: saved.length,
+          itemCount: jobs.length,
           itemBuilder: (context, index) {
-            final job = saved[index];
+            final job = jobs[index];
             return ListTile(
-              key: ValueKey(job.id),
-              title: Text("[${index}] ${job.title}"),
-              subtitle: Text("${job.location}"),
-              trailing: Icon(Icons.star),
-              onTap: () => Navigator.of(context).pushNamed(
-                '/detail',
-                arguments: ScreenArguments(
-                  id: job.id.toString(),
-                  type: job.type.toString(),
-                  url: job.url.toString(),
-                  created_at: job.created_at.toString(),
-                  company_url: job.company_url.toString(),
-                  location: job.location.toString(),
-                  title: job.title.toString(),
-                  description: job.description,
-                  how_to_apply: job.how_to_apply,
-                  company_logo: job.company_logo.toString(),
-                  company: job.company.toString(),
-                  // parentKey: parentKey,
-                ),
-              ),
-            );
+                key: ValueKey(job.id),
+                title: Text("[${index}] ${job.title}"),
+                subtitle: Text("${job.location}"),
+                trailing: Icon(Icons.bookmark),
+                onTap: () => Navigator.of(context).pushNamed(
+                      '/detail',
+                      arguments: ScreenArguments(
+                        id: job.id.toString(),
+                        type: job.type.toString(),
+                        url: job.url.toString(),
+                        created_at: job.created_at.toString(),
+                        company_url: job.company_url.toString(),
+                        location: job.location.toString(),
+                        title: job.title.toString(),
+                        description: job.description,
+                        how_to_apply: job.how_to_apply,
+                        company_logo: job.company_logo.toString(),
+                        company: job.company.toString(),
+                        // parentKey: parentKey,
+                      ),
+                    ));
           });
     }
-  }
-
-  Widget _requestLocation(BuildContext context) {
-    return Container(
-        key: Key('Empty'),
-        height: MediaQuery.of(context).size.height / 2,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Location Access Disabled',
-              style: Theme.of(context).textTheme.title.copyWith(
-                    color: Colors.white54,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Please Allow "Jobber" to use your location.',
-              style: Theme.of(context).textTheme.body1.copyWith(
-                    color: Colors.white54,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ));
   }
 
   Widget _loading(BuildContext context) => Container(
@@ -152,5 +97,4 @@ class _SavedListPageState extends State<SavedListPage> {
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
       );
-
 }
